@@ -1,11 +1,15 @@
-// ±â¸» ÇÁ·ÎÁ§Æ® ÇÊ±âÃ¼ ÀÎ½Ä
-//±â¸» ÇÁ·ÎÁ§Æ® ÇÊ±âÃ¼ ¼ýÀÚÀÎ½Ä
+// ï¿½â¸» ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ê±ï¿½Ã¼ ï¿½ï¿½ï¿½ï¿½ï¿½Î½ï¿½
 #include<iostream>
 #include<opencv2/opencv.hpp>
 using namespace std;
 using namespace cv;
 void menu(Mat* img);
-void on_mouse(int event,int x, int y, int flags, void* userdata);
+void Savefile(Mat& src);
+void Roadfile(Mat& src);
+void Clear(Mat& src);
+void Run(Mat& src);
+void Exit();
+void on_mouse(int event, int x, int y, int flags, void* userdata);
 int main(void)
 {
 	Mat src(500, 700, CV_8UC3, Scalar(255, 255, 255));
@@ -29,34 +33,91 @@ void menu(Mat* img)
 	}
 	String massage[] = { "Save","Load","Clear","Run","Exit" };
 	int y = 0;
-	Mat dst = src(Rect(500, 0, 200, 500));//¸Þ´º±â´É ºÎºÐÇà·Ä ÃßÃâ
-	Size dstsize = dst.size();//dst »çÀÌÁî
-	for (int i = 0; i < 5; i++)//UI ÅØ½ºÆ® ¸¦ º¸¿©ÁÖ±â À§ÇÑ ¹Ýº¹¹®
+	Mat dst = src(Rect(500, 0, 200, 500));//ï¿½Þ´ï¿½ï¿½ï¿½ï¿½ ï¿½Îºï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	Size dstsize = dst.size();//dst ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	for (int i = 0; i < 5; i++)//UI ï¿½Ø½ï¿½Æ® ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ö±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ýºï¿½ï¿½ï¿½
 	{
 		Size sizeText = getTextSize(massage[i], FONT_HERSHEY_TRIPLEX, 1.0, 1, 0);
-		Point org((dstsize.width - sizeText.width) / 2, (dstsize.height / 5 + sizeText.height) / 2 + y);//ºÎºÐÇà·Ä ÃßÃâ·Î ¿øº» ¿À¸¥ÂÊ¿¡ ¸Þ´º UI ÅØ½ºÆ® Ãâ·Â 500 x 500Àº ÀÔ·ÂÃ¢
+		Point org((dstsize.width - sizeText.width) / 2, (dstsize.height / 5 + sizeText.height) / 2 + y);//ï¿½Îºï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ê¿ï¿½ ï¿½Þ´ï¿½ UI ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ 500 x 500ï¿½ï¿½ ï¿½Ô·ï¿½Ã¢
 		putText(dst, massage[i], org, FONT_HERSHEY_TRIPLEX, 1.0, 1);
 		y += 100;
 	}
 }
-void on_mouse(int event,int x, int y, int flags, void* userdata)
+void on_mouse(int event, int x, int y, int flags, void* userdata)
 {
 	Mat src = *(Mat*)userdata;
+	String file;
 	static Point ptPrev(-1, -1);
 	switch (event)
 	{
 	case EVENT_LBUTTONDOWN:
 	{
 		ptPrev = Point(x, y);
+		if (ptPrev.inside(Rect(500, 0, 200, 100)))
+		{
+			Savefile(src);
+		}
+		else if (ptPrev.inside(Rect(500, 100, 200, 100)))
+		{
+			Roadfile(src);
+		}
+		else if (ptPrev.inside(Rect(500, 200, 200, 100)))
+		{
+			Clear(src);
+		}
+		else if (ptPrev.inside(Rect(500, 300, 200, 100)))
+		{
+			Run(src);
+		}
+		else if (ptPrev.inside(Rect(500, 400, 200, 100)))
+		{
+			Exit();
+		}
 		break;
 	}
 	case EVENT_MOUSEMOVE:
 	{
 		if (flags & EVENT_FLAG_LBUTTON) {
-			line(src, ptPrev, Point(x, y), Scalar::all(0), 5, LINE_AA, 0);
-			ptPrev = Point(x, y);
+			if (Rect(0,0,500,500).contains(ptPrev)&&Rect(0,0,500,500).contains(Point(x,y))){
+				line(src, ptPrev, Point(x, y), Scalar::all(0), 5, LINE_AA, 0);
+				ptPrev = Point(x, y);
+			}
 		}
 		break;
 	}
 	}
+}
+void Savefile(Mat& src)
+{
+	String file;
+	cout << "ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½Ô·ï¿½:";
+	cin >> file;
+	imwrite(file, src(Rect(0, 0, 500, 500)));
+	cout << file << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+}
+void Roadfile(Mat& src)
+{
+	String file;
+	cout << "ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ ï¿½Ô·ï¿½:";
+	cin >> file;
+	Mat dst = imread(file, IMREAD_COLOR);
+	if (dst.empty()) { cerr << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ö½ï¿½ï¿½Ï´ï¿½." << endl; return; }
+	dst.copyTo(src(Rect(0, 0, 500, 500)));
+	cout << file << "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò·ï¿½ï¿½ï¿½" << endl;
+}
+void Clear(Mat& src)
+{
+	Mat dst = src(Rect(0, 0, 500, 500));
+	dst = Scalar::all(255);
+	cout << "ï¿½Ô·ï¿½Ã¢ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½" << endl;
+}
+void Run(Mat& src)
+{
+	cout << "ï¿½Î½Ä°ï¿½ï¿½" << endl;
+}
+void Exit()
+{
+	cout << "ï¿½ï¿½ï¿½Î±×·ï¿½ ï¿½ï¿½ï¿½ï¿½" << endl;
+	exit(1);
+	return;
 }
