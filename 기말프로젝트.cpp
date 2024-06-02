@@ -1,4 +1,5 @@
 //opencv 필기체 숫자인식 프로젝트
+//readme파일 업로드시 정지 당하기 떄문에 주석으로 대체
 #include<iostream>
 #include<opencv2/opencv.hpp>
 using namespace std;
