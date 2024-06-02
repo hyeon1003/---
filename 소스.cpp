@@ -106,7 +106,7 @@ void Roadfile(Mat& src)//load 함수 정의
 }
 void Clear(Mat& src)//clear 함수정의
 {
-	Mat dst = src(Rect(0, 0, 500, 500));//dst를 src숫자입력창 얕은복사
+	Mat dst = src(Rect(3,3,496,496));//dst를 src숫자입력창 얕은복사
 	dst = Scalar::all(255);//dst를 흰색으로 초기화(입력창 초기화)
 	cout << "입쳑창 삭제됨" << endl;
 }
