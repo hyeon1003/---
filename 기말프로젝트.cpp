@@ -27,10 +27,10 @@ int main(void)//메인함수
 void menu(Mat& img)//메뉴함수 정의
 {
 	Mat src = img;
-	rectangle(src, Rect(0, 0, 700, 500), Scalar(0, 0, 0), 3);//윈도우창에 사각형을 그림
-	line(src, Point(500, 0), Point(500, 500), Scalar(0, 0, 0), 3);//숫자입력창과 옵션을 구분하는 라인
+	rectangle(src, Rect(0, 0, 700, 500), Scalar(0, 0, 0), 1);//윈도우창에 사각형을 그림
+	line(src, Point(500, 0), Point(500, 500), Scalar(0, 0, 0), 1);//숫자입력창과 옵션을 구분하는 라인
 	for (int i = 1; i <= 4; ++i) {//save,load,clear,run,exit를 구분하는 라인
-		line(src, Point(500, i * 100), Point(700, i * 100), Scalar(0, 0, 0), 3);
+		line(src, Point(500, i * 100), Point(700, i * 100), Scalar(0, 0, 0), 1);
 	}
 	String massage[] = { "Save","Load","Clear","Run","Exit" };//ui를 배열로 저장
 	int y = 0;//반복하면서 100씩더할 예정
@@ -92,7 +92,9 @@ void Savefile(Mat& src)//save 함수 정의
 	String file;//저장할 파일이름을 저장할 객체선언
 	cout << "파일명입력:";
 	cin >> file;//파일이름을 입력
-	imwrite(file, src(Rect(3, 3, 496, 496)));//컬러영상파일로 프로젝트 폴더에 저장
+	Mat dst = src(Rect(3, 3, 496, 496));
+	resize(dst, dst, Size(500, 500));
+	imwrite(file, dst);//컬러영상파일로 프로젝트 폴더에 저장
 	cout << file << "파일이 저장됨" << endl;
 }
 void Roadfile(Mat& src)//load 함수 정의
@@ -101,9 +103,8 @@ void Roadfile(Mat& src)//load 함수 정의
 	cout << "파일명을 입력:";
 	cin >> file;//파일이름을 입력
 	Mat dst = imread(file, IMREAD_COLOR);//dst에 파일을 컬러로 불러옴
-	resize(dst, dst, Size(500, 500));
 	if (dst.empty()) { cerr << "파일이 존재하지않습니다." << endl; return; }//불러오는 영상이 비어있을때
-	dst.copyTo(src(Rect(0, 0, 500, 500)));//원본500*500(숫자입력창)에 깊은복사
+	dst(Rect(3, 3, 496, 496)).copyTo(src(Rect(3, 3, 496, 496)));//원본500*500(숫자입력창)에 깊은복사 라인은 유지
 	cout << file << "파일을 불러옴" << endl;
 }
 void Clear(Mat& src)//clear 함수정의
