@@ -13,7 +13,7 @@ void Exit();//종료함수 선언
 void on_mouse(int event, int x, int y, int flags, void* userdata);//마우스이벤트 함수선언
 int main(void)//메인함수
 {
-	Mat src(500, 700, CV_8UC3, Scalar(255, 255, 255));//윈도우크기 500*700
+	Mat src(500, 900, CV_8UC3, Scalar(255, 255, 255));//윈도우크기 500*700
 	menu(src);//메뉴함수 호출
 	namedWindow("src");//마우스이벤트 함수사용을 위해 미리 윈도우 생성
 	setMouseCallback("src", on_mouse, &src);//마우스 함수 호출
@@ -32,7 +32,7 @@ void menu(Mat& img)//메뉴함수 정의
 	for (int i = 1; i <= 4; ++i) {//save,load,clear,run,exit를 구분하는 라인
 		line(src, Point(500, i * 100), Point(700, i * 100), Scalar(0, 0, 0), 1);
 	}
-	String massage[] = { "Save","Load","Clear","Run","Exit" };//ui를 배열로 저장
+	String massage[] = { "Save","Load","Clear","Run","Exit","contour","contour"};//ui를 배열로 저장
 	int y = 0;//반복하면서 100씩더할 예정
 	Mat dst = src(Rect(500, 0, 200, 500));//문자열을 윈도우에 쓰기위해서 
 	Size dstsize = dst.size();//dst의 사이즈를 저장할 객체
@@ -43,6 +43,17 @@ void menu(Mat& img)//메뉴함수 정의
 		putText(dst, massage[i], org, FONT_HERSHEY_TRIPLEX, 1.0, 1);//문자열 출력함수 호출
 		y += 100;//아래로 100씩 차이가 나므로 100씩더해줌
 	}
+	y = 0;
+	Mat dst2 = src(Rect(700, 0, 200, 200));//새로운 특징추출
+	Size dst2size = dst2.size();
+	for (int i = 5; i < 7; i++)
+	{
+		Size sizeText = getTextSize(massage[i], FONT_HERSHEY_TRIPLEX, 1.0, 1.0, 0);
+		Point org((dst2size.width - sizeText.width) / 2, (dst2size.height / 2 + sizeText.height) / 2 + y);
+		putText(dst2, massage[i], org, FONT_HERSHEY_TRIPLEX, 1.0, 1.0, 0);
+		y += 100;
+	}
+
 }
 void on_mouse(int event, int x, int y, int flags, void* userdata)//마우스 콜백함수 정의
 {
