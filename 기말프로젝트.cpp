@@ -216,15 +216,14 @@ void Run(Mat& src) {
 				if (abs(cf.x - cf.y) > 12) {
 					cout << "인식한 숫자: 9" << endl;
 				}
-				if (ar * 100 <= 70)
+				else if (ar * 100 <= 70)
 				{
 					if (abs(cf.x - cf.y) < 5)
 						cout << "인식한 숫자: 6" << endl;
-					else if (abs(cf.x - cf.y) < 7 && ar * 100 > 60)
+					else if (abs(cf.x - cf.y) <7)
 						cout << "인식한 숫자: 0" << endl;
-					
 				}
-				if (ar * 100 >= 70)
+				else if (ar * 100 >= 70)
 					cout << "인식한 숫자: 0" << endl;
 			}
 			else if (count_y == 2) {//y축으로 나눌때 외각선이 2개일때
